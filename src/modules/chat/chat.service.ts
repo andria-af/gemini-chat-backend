@@ -2,12 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { GeminiService } from '../gemini/gemini.service';
 import { SendMessageDto } from './dto/send-message.dto';
+import { WebsocketGateway } from '../websocket/websocket.gateway';
 
 @Injectable()
 export class ChatService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly geminiService: GeminiService,
+    private readonly websocketGateway: WebsocketGateway,
   ) {}
 
   async sendMessage(dto: SendMessageDto) {
@@ -27,9 +29,16 @@ export class ChatService {
       },
     });
 
-    const assistantText = await this.geminiService.generateResponse(
-      dto.content.trim(),
-    );
+    this.websocketGateway.emitToConversation(dto.conversationId, 'messageCreated', {
+      message: userMessage,
+    });
+
+    this.websocketGateway.emitToConversation(dto.conversationId, 'assistantTyping', {
+      conversationId: dto.conversationId,
+      status: true,
+    });
+
+    const assistantText = await this.geminiService.generateResponse(dto.content.trim());
 
     const assistantMessage = await this.prisma.message.create({
       data: {
@@ -37,6 +46,15 @@ export class ChatService {
         role: 'assistant',
         content: assistantText,
       },
+    });
+
+    this.websocketGateway.emitToConversation(dto.conversationId, 'assistantTyping', {
+      conversationId: dto.conversationId,
+      status: false,
+    });
+
+    this.websocketGateway.emitToConversation(dto.conversationId, 'messageCreated', {
+      message: assistantMessage,
     });
 
     await this.prisma.conversation.update({
