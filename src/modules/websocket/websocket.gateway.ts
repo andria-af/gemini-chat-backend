@@ -6,6 +6,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
   MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
@@ -38,7 +39,7 @@ export class WebsocketGateway
 
   @SubscribeMessage('joinConversation')
   handleJoinConversation(
-    client: Socket,
+    @ConnectedSocket() client: Socket,
     @MessageBody() payload: { conversationId: string },
   ) {
     client.join(payload.conversationId);
