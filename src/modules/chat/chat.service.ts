@@ -21,24 +21,49 @@ export class ChatService {
       throw new NotFoundException('Conversa não encontrada');
     }
 
+    const trimmedContent = dto.content.trim();
+
     const userMessage = await this.prisma.message.create({
       data: {
         conversationId: dto.conversationId,
         role: 'user',
-        content: dto.content.trim(),
+        content: trimmedContent,
       },
     });
 
-    this.websocketGateway.emitToConversation(dto.conversationId, 'messageCreated', {
-      message: userMessage,
+    this.websocketGateway.emitToConversation(
+      dto.conversationId,
+      'messageCreated',
+      {
+        message: userMessage,
+      },
+    );
+
+    this.websocketGateway.emitToConversation(
+      dto.conversationId,
+      'assistantTyping',
+      {
+        conversationId: dto.conversationId,
+        status: true,
+      },
+    );
+
+    const conversationMessages = await this.prisma.message.findMany({
+      where: { conversationId: dto.conversationId },
+      orderBy: { createdAt: 'asc' },
     });
 
-    this.websocketGateway.emitToConversation(dto.conversationId, 'assistantTyping', {
-      conversationId: dto.conversationId,
-      status: true,
-    });
+    const history = conversationMessages
+      .map((message) => {
+        const role = message.role === 'user' ? 'Usuário' : 'Assistente';
+        return `${role}: ${message.content}`;
+      })
+      .join('\n');
 
-    const assistantText = await this.geminiService.generateResponse(dto.content.trim());
+    const assistantText = await this.geminiService.generateResponse(
+      trimmedContent,
+      history,
+    );
 
     const assistantMessage = await this.prisma.message.create({
       data: {
@@ -48,14 +73,22 @@ export class ChatService {
       },
     });
 
-    this.websocketGateway.emitToConversation(dto.conversationId, 'assistantTyping', {
-      conversationId: dto.conversationId,
-      status: false,
-    });
+    this.websocketGateway.emitToConversation(
+      dto.conversationId,
+      'assistantTyping',
+      {
+        conversationId: dto.conversationId,
+        status: false,
+      },
+    );
 
-    this.websocketGateway.emitToConversation(dto.conversationId, 'messageCreated', {
-      message: assistantMessage,
-    });
+    this.websocketGateway.emitToConversation(
+      dto.conversationId,
+      'messageCreated',
+      {
+        message: assistantMessage,
+      },
+    );
 
     await this.prisma.conversation.update({
       where: { id: dto.conversationId },
@@ -63,7 +96,7 @@ export class ChatService {
         updatedAt: new Date(),
         title:
           conversation.title === 'Nova conversa'
-            ? dto.content.trim().slice(0, 40)
+            ? trimmedContent.slice(0, 40)
             : conversation.title,
       },
     });
