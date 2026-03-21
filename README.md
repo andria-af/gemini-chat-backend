@@ -1,11 +1,11 @@
 # 🤖 Gemini Chat — Backend
-
 API desenvolvida em **NestJS** com as atividades:
 
 * autenticação simples de usuários
 * gerenciamento de conversas e mensagens
 * integração com a API do **Google Gemini**
 * comunicação em tempo real via **WebSocket (Socket.IO)**
+
 
 ## Tecnologias: 
 * Node.js
@@ -33,6 +33,7 @@ GEMINI_API_KEY="AIzaSyDLdsoYGsi7VWtvDG_Oxbei8SXSYYY2_bw"
 PORT=3000
 ```
 
+
 ## ▶️ Como rodar o projeto local:
 
 ```bash
@@ -44,6 +45,7 @@ npm run start:dev
 npm run build
 npm run start:prod
 ```
+
 
 ##  Principais endpoints
 
