@@ -1,46 +1,66 @@
-# 🚀 gemini-chat-backend
+# 🤖 Gemini Chat — Backend
 
-API backend do projeto de chat com integração futura com Gemini.
+API desenvolvida em **NestJS** com as atividades:
 
----
+* autenticação simples de usuários
+* gerenciamento de conversas e mensagens
+* integração com a API do **Google Gemini**
+* comunicação em tempo real via **WebSocket (Socket.IO)**
 
-## 🧱 Stack
+## Tecnologias: 
+* Node.js
+* NestJS
+* Prisma
+* PostgreSQL (Neon)
+* Socket.IO
+* Google Generative AI
 
-- Node.js
-- NestJS
-- Prisma ORM
-- PostgreSQL (Neon)
-- TypeScript
+### Deploy Render: https://gemini-chat-backend-xn88.onrender.com
 
----
-
-## ▶️ Como rodar
+### Instalação
 
 ```bash
-# instalar dependências
 npm install
+```
 
-# gerar client do prisma
-npx prisma generate
+### Variáveis de ambiente
+Crie um arquivo `.env`:
 
-# rodar migrations
-npx prisma migrate dev
+```env
+DATABASE_URL="postgresql://neondb_owner:npg_UiafZ8egS0pq@ep-damp-fog-ady0e976-pooler.c-2.us-east-1.aws.neon.tech/gemini-chat-db?sslmode=require&channel_binding=require"
+FRONTEND_URL="http://localhost:5173"
+GEMINI_API_KEY="AIzaSyDLdsoYGsi7VWtvDG_Oxbei8SXSYYY2_bw"
+PORT=3000
+```
 
-# iniciar aplicação
+## ▶️ Como rodar o projeto local:
+
+```bash
 npm run start:dev
+```
 
-📌 Status
+### Build produção
+```bash
+npm run build
+npm run start:prod
+```
 
-🚧 Em desenvolvimento
+##  Principais endpoints
 
- Estrutura inicial com NestJS
+### Auth
+* `POST /auth/login`
 
- Configuração do Prisma
+### Conversations
+* `POST /conversations`
+* `GET /conversations/user/:userId`
+* `GET /conversations/:id/messages`
 
- Login (find or create user)
+### Chat
+* `POST /chat/message`
 
- Conversas
+### Observações
+* A autenticação simplificada (username sem senha)
+* As mensagens são persistidas no banco PostgreSQL (Neon).
+* Foi usado WebSocket para atualização em tempo real das mensagens.
 
- Mensagens
-
- Integração com Gemini
+---
