@@ -1,21 +1,32 @@
 # 🤖 Gemini Chat — Backend
+
 API desenvolvida em **NestJS** com as atividades:
 
-* autenticação simples de usuários
-* gerenciamento de conversas e mensagens
-* integração com a API do **Google Gemini**
-* comunicação em tempo real via **WebSocket (Socket.IO)**
+- autenticação simples de usuários
+- gerenciamento de conversas e mensagens
+- integração com a API do **Google Gemini**
+- comunicação em tempo real via **WebSocket (Socket.IO)**
 
+## Tecnologias:
 
-## Tecnologias: 
-* Node.js
-* NestJS
-* Prisma
-* PostgreSQL (Neon)
-* Socket.IO
-* Google Generative AI
+- Node.js
+- NestJS
+- Prisma
+- PostgreSQL (Neon)
+- Socket.IO
+- Google Generative AI
 
 ### Deploy Render: https://gemini-chat-backend-xn88.onrender.com
+
+## Requisitos
+
+- Node.js 22.13+ (recomendado)
+- npm 10+
+
+```bash
+nvm install 22.13.0
+nvm use 22.13.0
+```
 
 ### Instalação
 
@@ -24,6 +35,7 @@ npm install
 ```
 
 ### Variáveis de ambiente
+
 Crie um arquivo `.env`:
 
 ```env
@@ -33,36 +45,40 @@ GEMINI_API_KEY="AIzaSyDLdsoYGsi7VWtvDG_Oxbei8SXSYYY2_bw"
 PORT=3000
 ```
 
-
 ## ▶️ Como rodar o projeto local:
 
 ```bash
+npx prisma generate
 npm run start:dev
 ```
 
 ### Build produção
+
 ```bash
 npm run build
 npm run start:prod
 ```
 
-
-##  Principais endpoints
+## Principais endpoints
 
 ### Auth
-* `POST /auth/login`
+
+- `POST /auth/login`
 
 ### Conversations
-* `POST /conversations`
-* `GET /conversations/user/:userId`
-* `GET /conversations/:id/messages`
+
+- `POST /conversations`
+- `GET /conversations/user/:userId`
+- `GET /conversations/:id/messages`
 
 ### Chat
-* `POST /chat/message`
+
+- `POST /chat/message`
 
 ### Observações
-* A autenticação simplificada (username sem senha)
-* As mensagens são persistidas no banco PostgreSQL (Neon).
-* Foi usado WebSocket para atualização em tempo real das mensagens.
+
+- A autenticação simplificada (username sem senha)
+- As mensagens são persistidas no banco PostgreSQL (Neon).
+- Foi usado WebSocket para atualização em tempo real das mensagens.
 
 ---
