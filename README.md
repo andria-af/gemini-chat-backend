@@ -41,9 +41,13 @@ Crie um arquivo `.env`:
 ```env
 DATABASE_URL="postgresql://neondb_owner:npg_UiafZ8egS0pq@ep-damp-fog-ady0e976-pooler.c-2.us-east-1.aws.neon.tech/gemini-chat-db?sslmode=require&channel_binding=require"
 FRONTEND_URL="http://localhost:5173"
-GEMINI_API_KEY="AIzaSyDLdsoYGsi7VWtvDG_Oxbei8SXSYYY2_bw"
+GEMINI_API_KEY="sua_chave_gemini_aqui"
 PORT=3000
 ```
+A variável `GEMINI_API_KEY` é obrigatória para o funcionamento da integração com a API do Gemini.
+
+Por segurança, a chave real não está incluída neste repositório público. Caso você precise testar a aplicação e não possua uma chave válida, solicite uma chave de acesso por um canal privado.
+
 
 ## ▶️ Como rodar o projeto local:
 
